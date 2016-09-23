@@ -92,12 +92,32 @@ layers:
 resources: resources
 title: 'PDT Test'
 treebank_id: pt
-
 ```
-
+### Command line options
+**TODO: compare with configuration file**
 
 ## Treebank conversion (`convert`)
+
+Treebank conversion is ran with command `pmltq convert`. There must be setted additional information in configuration file:
+```
+data_dir: 'relative path to data to current directory'
+```
+For each layer has to be setted `data` field that stores relative path template to data to `data_dir`. For example: `data: '*.a.gz'`. `output_dir` can be setted. If it is not setted `'sql_dump'` is used as a default value.
+
 ## Load treebank to database (`initdb`, `load`, `verify`)
+
+For following operations has to be setted database credentials in addition to previouse config file.
+```
+db:
+  host: 'database.server'
+  password: 'pass'
+  port: 5432
+  user: 'nick'
+  name: pt
+```
+
+Command `pmltq initdb` creates a database into that will be loaded treebank data and creates tables that are common for all treebanks. Than has to be ran command `pmltq load` that loads treebank to database. Whole load process can be verified with `pmltq verify`.
+
 ## Treebank publication (`webload`, `webverify`)
 ## Removing treebank (`delete`, `webdelete`)
 ## Links
