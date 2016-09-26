@@ -1,6 +1,12 @@
 # PML to PostgreSQL conversion and publication
 
-This tutorial shows conversion and treebank publication of a [sample data](https://metacpan.org/source/MATY/PMLTQ-1.3.1/xt/author/treebanks/pdt_test) of Prague dependency treebank.
+This tutorial shows conversion and treebank publication of a [sample data](https://metacpan.org/source/MATY/PMLTQ-1.3.1/xt/author/treebanks/pdt_test) of Prague dependency treebank. We expects following directory structure:
+```
+pt
+pt/resources
+pt/data
+```
+All commands will be ran from `pt` directory.
 
 ## Requirements
 ### Client
@@ -108,16 +114,73 @@ For each layer has to be setted `data` field that stores relative path template 
 
 For following operations has to be setted database credentials in addition to previouse config file.
 ```
+sys_db: postgres
 db:
   host: 'database.server'
   password: 'pass'
   port: 5432
-  user: 'nick'
+  user: 'db.nick'
   name: pt
 ```
 
 Command `pmltq initdb` creates a database into that will be loaded treebank data and creates tables that are common for all treebanks. Than has to be ran command `pmltq load` that loads treebank to database. Whole load process can be verified with `pmltq verify`.
 
-## Treebank publication (`webload`, `webverify`)
+### Possible errors
+#### Unable to conect to database
+After running `pml initdb` can occur following error:
+```
+DBI connect('dbname=postgres;host=database.server;port=5432','nick',...) failed: FATAL:  no pg_hba.conf entry for host "YOUR IP ADDRESS", user "db.nick", database "postgres", SSL on FATAL:  no pg_hba.conf entry for host "YOUR IP ADDRESS", user "db.nick", database "postgres", SSL off at /usr/local/share/perl/5.22.1/PMLTQ/Command.pm line 54.
+```
+The cause of this error is that it is not allowed to access to database from `YOUR IP ADDRESS` in `pg_hba.conf`. Possible solution is to make a ssh tunnel to database server.
+```
+ssh -t -L 15432:127.0.0.1:5432 ssh.nick@database.server
+```
+And modify following lines in config file:
+```
+db:
+  host: localhost
+  port: 15432
+```
+
+## Copy PML data to PML-TQ Server
+```
+scp -r ../pt pmltq.nick@pmltq.server:/datapath
+```
+## Treebank publication (`webload`)
+
+```
+description: ''
+homepage: ''
+isFeatured: 'false'
+isFree: 'false'
+isPublic: 'false'
+language: 'lang code'
+manuals:
+  -
+    title: ''
+    url: ''
+tags:
+  - mytag
+web_api:
+  dbserver: ''
+  password: ''
+  url: ''
+  user: ''
+layers:
+  -
+    path: 'pt/data'
+  -
+    path: '<change this to point to files relative to the data directory on server>'
+```
+
+## Verification of whole process (`webverify`)
+```
+text_query:
+  queries:
+    -
+      filename: 01.svg
+      query: 'a-node [];'
+  result_dir: webverify_query_results
+```
 ## Removing treebank (`delete`, `webdelete`)
 ## Links
