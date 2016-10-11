@@ -31,7 +31,7 @@ All commands will be ran from `pt` directory.
 **TODO: basic description of the file. Add new part of configuration file at each section .**
 
 Configuration file is in a YAML format and contains a necessary information about conversion and treebank deployment. Command `pmltq init resources/{a,t}*` runs a step-by-step guide that asks for some aditional information (Full treebank title, Treebank ID). Resources files contains path to treebanks schema. Finally it creates a template of configuration file:
-```
+``` json
 ---
 #data_dir: ''
 #description: ''
@@ -48,7 +48,7 @@ Configuration file is in a YAML format and contains a necessary information abou
 #sys_db: postgres
 #tags:
 #  - mytag
-#text_query:
+#test_query:
 #  queries:
 #    -
 #      filename: 01.svg
@@ -105,7 +105,7 @@ treebank_id: pt
 ## Treebank conversion (`convert`)
 
 Treebank conversion is ran with command `pmltq convert`. There must be setted additional information in configuration file:
-```
+``` json
 data_dir: 'relative path to data to current directory'
 ```
 For each layer has to be setted `data` field that stores relative path template to data to `data_dir`. For example: `data: '*.a.gz'`. `output_dir` can be setted. If it is not setted `'sql_dump'` is used as a default value.
@@ -113,7 +113,7 @@ For each layer has to be setted `data` field that stores relative path template 
 ## Load treebank to database (`initdb`, `load`, `verify`)
 
 For following operations has to be setted database credentials in addition to previouse config file.
-```
+``` json
 sys_db: postgres
 db:
   host: 'database.server'
@@ -126,29 +126,30 @@ db:
 Command `pmltq initdb` creates a database into that will be loaded treebank data and creates tables that are common for all treebanks. Than has to be ran command `pmltq load` that loads treebank to database. Whole load process can be verified with `pmltq verify`.
 
 ### Possible errors
-#### Unable to conect to database
+#### Unable to connect to database
 After running `pml initdb` can occur following error:
 ```
 DBI connect('dbname=postgres;host=database.server;port=5432','nick',...) failed: FATAL:  no pg_hba.conf entry for host "YOUR IP ADDRESS", user "db.nick", database "postgres", SSL on FATAL:  no pg_hba.conf entry for host "YOUR IP ADDRESS", user "db.nick", database "postgres", SSL off at /usr/local/share/perl/5.22.1/PMLTQ/Command.pm line 54.
 ```
 The cause of this error is that it is not allowed to access to database from `YOUR IP ADDRESS` in `pg_hba.conf`. Possible solution is to make a ssh tunnel to database server.
-```
+``` bash
 ssh -t -L 15432:127.0.0.1:5432 ssh.nick@database.server
 ```
 And modify following lines in config file:
-```
+``` json
 db:
   host: localhost
   port: 15432
 ```
 
 ## Copy PML data to PML-TQ Server
-```
+You can copy PML data to a server with following command. BTrEd macro [PrintServer](https://github.com/ufal/pmltq-print-server) uses this files for tree rendering. This files must have enough access privileges.
+``` bash
 scp -r ../pt pmltq.nick@pmltq.server:/datapath
 ```
 ## Treebank publication (`webload`)
-
-```
+Command `pmltq webload` loads following settings to web interface.
+``` json
 description: ''
 homepage: ''
 isFeatured: 'false'
@@ -174,13 +175,33 @@ layers:
 ```
 
 ## Verification of whole process (`webverify`)
-```
-text_query:
+
+After whole process you can verify it with command `pmltq webverify`. In this example it runs `a-nbode []` query on treebank and saves the result to `webverify_query_results/01.svg`
+``` json
+test_query:
   queries:
     -
       filename: 01.svg
       query: 'a-node [];'
   result_dir: webverify_query_results
 ```
+### Possible errors
+Svg files are cached, you have to remove cache after change.
+**Empty svg file** - wrong path to data on server
+**Tree without labels** - wrong stylesheets, unknown language
+
 ## Removing treebank (`delete`, `webdelete`)
+`pmltq webdelete` removes treebank from webinterface and `pmltq delete` removes it from database. PML files on server stay untouched.
+## Euler settings (ÚFAL)
+``` bash
+datapath="/opt/pmltq-data"
+ssh.nick="pmltq"
+pmltq.nick="pmltq"
+db.nick="pmltq"
+database.server="euler.ms.mff.cuni.cz"
+
+--web_api-dbserver="euler"
+--web_api-user="pmltq"
+--web_api-url="https://lindat.mff.cuni.cz/services/pmltq/"
+```
 ## Links
