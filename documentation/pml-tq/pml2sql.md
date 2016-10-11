@@ -28,7 +28,6 @@ All commands will be ran from `pt` directory.
 - bTrEd macro PrintServer
 
 ### Configuration file (`init`)
-**TODO: basic description of the file. Add new part of configuration file at each section .**
 
 Configuration file is in a YAML format and contains a necessary information about conversion and treebank deployment. Command `pmltq init resources/{a,t}*` runs a step-by-step guide that asks for some aditional information (Full treebank title, Treebank ID). Resources files contains path to treebanks schema. Finally it creates a template of configuration file:
 ``` json
@@ -100,7 +99,12 @@ title: 'PDT Test'
 treebank_id: pt
 ```
 ### Command line options
-**TODO: compare with configuration file**
+Settings can be done as a command line parameters. It ovewrites settings in file. Subsection setting is done throw`-`. For example `--db-name=pt` means
+``` yaml
+db:
+  name: pt
+```
+
 
 ## Treebank conversion (`convert`)
 
@@ -113,7 +117,7 @@ For each layer has to be setted `data` field that stores relative path template 
 ## Load treebank to database (`initdb`, `load`, `verify`)
 
 For following operations has to be setted database credentials in addition to previouse config file.
-``` json
+```
 sys_db: postgres
 db:
   host: 'database.server'
