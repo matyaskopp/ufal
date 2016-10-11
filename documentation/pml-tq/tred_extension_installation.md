@@ -15,7 +15,7 @@ Following tutorial has been tested on windows 7 and windows 10:
 
   a. `Setup >> Manage Extensions >> Get New Extensions`
 
-  b. Select axtension
+  b. Select the PML-TQ extension
   
   c. Close Manage Extensions window (Installation will start after that)
   
