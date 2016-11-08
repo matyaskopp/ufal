@@ -30,7 +30,7 @@ All commands will be ran from `pt` directory.
 ### Configuration file (`init`)
 
 Configuration file is in a YAML format and contains a necessary information about conversion and treebank deployment. Command `pmltq init resources/{a,t}*` runs a step-by-step guide that asks for some aditional information (Full treebank title, Treebank ID). Resources files contains path to treebanks schema. Finally it creates a template of configuration file:
-``` json
+``` yaml
 ---
 #data_dir: ''
 #description: ''
@@ -109,7 +109,7 @@ db:
 ## Treebank conversion (`convert`)
 
 Treebank conversion is ran with command `pmltq convert`. There must be setted additional information in configuration file:
-``` json
+``` yaml
 data_dir: 'relative path to data to current directory'
 ```
 For each layer has to be setted `data` field that stores relative path template to data to `data_dir`. For example: `data: '*.a.gz'`. `output_dir` can be setted. If it is not setted `'sql_dump'` is used as a default value.
@@ -117,7 +117,7 @@ For each layer has to be setted `data` field that stores relative path template 
 ## Load treebank to database (`initdb`, `load`, `verify`)
 
 For following operations has to be setted database credentials in addition to previouse config file.
-```
+```yaml
 sys_db: postgres
 db:
   host: 'database.server'
@@ -140,7 +140,7 @@ The cause of this error is that it is not allowed to access to database from `YO
 ssh -t -L 15432:127.0.0.1:5432 ssh.nick@database.server
 ```
 And modify following lines in config file:
-``` json
+``` yaml
 db:
   host: localhost
   port: 15432
@@ -153,7 +153,7 @@ scp -r ../pt pmltq.nick@pmltq.server:/datapath
 ```
 ## Treebank publication (`webload`)
 Command `pmltq webload` loads following settings to web interface.
-``` json
+``` yaml
 description: ''
 homepage: ''
 isFeatured: 'false'
@@ -181,7 +181,7 @@ layers:
 ## Verification of whole process (`webverify`)
 
 After whole process you can verify it with command `pmltq webverify`. In this example it runs `a-nbode []` query on treebank and saves the result to `webverify_query_results/01.svg`
-``` json
+``` yaml
 test_query:
   queries:
     -
