@@ -7,8 +7,11 @@ wget "$TESTLOCATION/install_tred.bash"
 sed -i .bak "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
 
 echo "Setting CPAN"
-echo `eval $(perl -I$HOME/.perl/lib/perl5 -Mlocal::lib=$HOME/.perl)` >> ~/.bashrc
-perl -I$HOME/.perl/lib/perl5 -Mlocal::lib=$HOME/.perl
+#echo `eval $(perl -I$HOME/.perl/lib/perl5 -Mlocal::lib=$HOME/.perl)` >> ~/.bashrc
+#perl -I$HOME/.perl/lib/perl5 -Mlocal::lib=$HOME/.perl
+cpan
+
+
 
 echo "Installing TrEd"
 bash install_tred.bash --tred-dir ~/tred
