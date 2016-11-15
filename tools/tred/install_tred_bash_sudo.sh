@@ -4,7 +4,7 @@ cd ~/Downloads
 sudo apt-get install libx11-dev libxft-dev libfontconfig1-dev libpng12-dev zlib1g-dev libxml2-dev
 
 wget "$TESTLOCATION/install_tred.bash"
-sed -i .bak "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
+sed -i "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
 
 
 echo "Installing TrEd"
