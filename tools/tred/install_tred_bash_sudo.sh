@@ -8,4 +8,4 @@ sed -i .bak "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
 
 
 echo "Installing TrEd"
-sudo bash install_tred.bash --tred-dir ~/tred
+sudo bash install_tred.bash --tred-dir /opt/tred
