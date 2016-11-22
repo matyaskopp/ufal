@@ -6,16 +6,11 @@ sudo apt-get install libx11-dev libxft-dev libfontconfig1-dev libpng12-dev zlib1
 wget "$TESTLOCATION/install_tred.bash"
 sed -i "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
 
-#Setting up cpan (so that it uses local directories; http://www.perlmonks.org/?node_id=630026):
-mkdir -p ~/.cpan/CPAN 
-#touch ~/.cpan/CPAN/MyConfig.pm #(or echo "1" >~/.cpan/CPAN/MyConfig.pm, or cp /root/.cpan/CPAN/Config.pm ~/.cpan/CPAN/MyConfig.pm if the subsequent command does not work)
-echo "1" >~/.cpan/CPAN/MyConfig.pm
 
-echo "o conf init\nuse local::lib\nadd settings to .bashrc\npress ctrl+d to exit"
-perl -MCPAN -e shell 
-
-#Installing cpanm for easier installation of other Perl modules
-cpan App::cpanminus
+wget -O- http://cpanmin.us | perl - -l ~/perl5 App::cpanminus local::lib
+eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`
+echo 'eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`' >> ~/.profile
+echo 'export MANPATH=$HOME/perl5/man:$MANPATH' >> ~/.profile
 
 #Installing some dependencies (UNIVERSAL::DOES, patched PerlIO::gzip, Treex::PML)
 cpanm UNIVERSAL::DOES
