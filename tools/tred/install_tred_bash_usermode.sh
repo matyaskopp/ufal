@@ -8,7 +8,7 @@ sed -i "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
 
 
 read -r -p "Do you want to configure local cpan? [Y/n] " response
-if [[ "$response" -eq 'n' ]]
+if [[ ! "$response" =~ ^([Nn]) ]]
 then
   echo -ne "\n\n\n" | perl -MCPAN -e shell
 else
@@ -16,7 +16,7 @@ else
 fi
 response=''
 read -r -p "Install Mojo::Base::XS - PML-TQ needs it? [Y/n] " response
-if [[ "$response" -eq 'n' ]]
+if [[ ! "$response" =~ ^([Nn]) ]]
 then
   cpan Mojo::Base::XS
 fi
