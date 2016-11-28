@@ -11,6 +11,7 @@ read -r -p "Do you want to configure local cpan? [Y/n] " response
 if [[ ! "$response" =~ ^([Nn]) ]]
 then
   echo -ne "\n\n\n" | perl -MCPAN -e shell
+  . ~/.bashrc
 else
   exit 0 
 fi
@@ -25,7 +26,7 @@ fi
 #wget -O- http://cpanmin.us | perl - -l ~/perl5 App::cpanminus local::lib || exit 2
 #eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`
 #eval `export MANPATH=$HOME/perl5/man:$MANPATH`
-#echo 'eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`' >> ~/.profile
+#echo 'eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`' >> ~/.profile	
 #echo 'export MANPATH=$HOME/perl5/man:$MANPATH' >> ~/.profile
 
 
