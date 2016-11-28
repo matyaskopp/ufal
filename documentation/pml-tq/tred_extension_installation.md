@@ -8,6 +8,8 @@ sudo apt-get install libx11-dev libxft-dev libfontconfig1-dev libpng12-dev zlib1
 wget "http://ufal.mff.cuni.cz/tred/install_tred.bash"
 # setting CPAN local
 echo -ne "\n\n\n" | perl -MCPAN -e shell
+# if you have configured cpan before tis command you should reconfigure it with
+## echo -ne "o conf init\n\n\n" | perl -MCPAN -e shell
 # setting environment variables
 . ~/.bashrc
 # Installing Mojo::Base::XS module (needed by PMLTQ)
