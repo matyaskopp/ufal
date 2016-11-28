@@ -7,12 +7,31 @@ wget "$TESTLOCATION/install_tred.bash"
 sed -i "s@http://ufal.mff.cuni.cz/tred@$TESTLOCATION@" install_tred.bash
 
 
-wget -O- http://cpanmin.us | perl - -l ~/perl5 App::cpanminus local::lib || exit 2
-eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`
-eval `export MANPATH=$HOME/perl5/man:$MANPATH`
-echo 'eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`' >> ~/.profile
-echo 'export MANPATH=$HOME/perl5/man:$MANPATH' >> ~/.profile
+read -r -p "Do you want to configure local cpan? [Y/n] " response
+if [[ $response =~ ^([nN][oO]|[nN])$ ]]
+then
+  echo -ne "\n\n\n" | perl -MCPAN -e shell
+else
+  exit 0 
+fi
+response=''
+read -r -p "Install Mojo::Base::XS - PML-TQ needs it? [Y/n] " response
+if [[ $response =~ ^([nN][oO]|[nN])$ ]]
+then
+  cpan Mojo::Base::XS
+fi
 
+
+#wget -O- http://cpanmin.us | perl - -l ~/perl5 App::cpanminus local::lib || exit 2
+#eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`
+#eval `export MANPATH=$HOME/perl5/man:$MANPATH`
+#echo 'eval `perl -I ~/perl5/lib/perl5 -Mlocal::lib`' >> ~/.profile
+#echo 'export MANPATH=$HOME/perl5/man:$MANPATH' >> ~/.profile
+
+
+
+
+###
 #Installing some dependencies (UNIVERSAL::DOES, patched PerlIO::gzip, Treex::PML)
 # cpanm UNIVERSAL::DOES - not needed
 
