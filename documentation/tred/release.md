@@ -23,7 +23,7 @@ curl -L https://install.perlbrew.pl | bash
 ### install system deps
 
 ```
-sudo ap-get update
+sudo apt-get update
 
 sudo apt-get install libxml2-dev
 sudo apt-get install libxslt1-dev
