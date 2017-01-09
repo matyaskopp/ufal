@@ -17,7 +17,7 @@
 
 ```bash
 sudo apt-get update
-sudo apt-get install libxml2-dev libxslt1-dev zlib1g-dev libgdbm-dev
+sudo apt-get install libxml2-dev libxslt1-dev zlib1g-dev libgdbm-dev libx11-dev
 
 sudo adduser pmltq
 ```
@@ -32,7 +32,7 @@ sudo chown pmltq:www-data pmltq-data print-server/svg_cache
 ```
 
 ## postgresql
-Following linea are for Ubuntu Xenial
+Following lines are for Ubuntu Xenial
 ```bash
 https://www.postgresql.org/download/linux/ubuntu/
 deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
@@ -62,9 +62,24 @@ curl -L https://install.perlbrew.pl | bash
 perlbrew install perl-5.22.0  --notest -Dcc=gcc
 ~/perl5/perlbrew/bin/perlbrew alias create perl-5.22.0 print-server
 ```
+## Treex
+```bash
+sudo apt-get install libexpat1-dev
+```
+
+```bash
+cd /opt
+git clone https://github.com/ufal/treex.git
+
+perlbrew use print-server
+cd /opt/treex
+cpanm --installdeps .
+```
 
 ##Printserver and TrEd
 ```bash
+sudo apt-get install xvfb
+
 sudo su pmltq 
 
 cd /opt
@@ -72,8 +87,8 @@ svn checkout https://svn.ms.mff.cuni.cz/svn/TrEd/trunk/tred_refactored/
 
 cd print-server
 git clone https://github.com/ufal/pmltq-print-server.git
-ln -s pmltq-print-server/print_srvr_simple.btred
-ln -s pmltq-print-server/print.btred
+cp pmltq-print-server/print_srvr_simple.btred . # symlink does not work: ln -s pmltq-print-server/print_srvr_simple.btred
+cp pmltq-print-server/print.btred . #  symlink does not work: ln -s pmltq-print-server/print.btred
 ```
 Create file `/opt/print-server/btred.rc`:
 ```bash
@@ -83,6 +98,19 @@ pml_compile=2
 
 ExtensionsDir=/opt/print-server/tred-extensions
 ```
+
+
+### Install perl dependencies for Printserver
+```bash
+perlbrew use print-server
+cpanm URI::Escape
+cpanm Treex::PML
+cpanm Readonly
+cpanm Tk::widgets
+
+
+```
+
 
 ## PMLTQ::Server
 **On your PC:**
@@ -98,12 +126,7 @@ Edit or copy and edit `Rexfile` file and set it.
 cp Rexfile Rexfile.new
 rex deploy -f Rexfile.new deploy
 ```
-## Treex
-```bash
-cd /opt
-git clone https://github.com/ufal/treex.git
-```
-** TODO add it to @INC**
+
 ## PMLTQ
 **TODO** change perlbrew !!!
 ```bash
@@ -168,10 +191,22 @@ UPDATE users SET password = '$2$08$bAOnumbVJ/uhknku47A0DO9JZxBMOca7I.1vFBNH7z1dL
 cd /opt/print-server
 svn checkout https://svn.ms.mff.cuni.cz/svn/TrEd/extensions/
 mv extensions tred-extensions
+ln -s /opt/treex/lib/Treex/Core/share/tred_extension/treex /opt/print-server/tred-extensions/
 ```
-**TODO:** Which extensions are necessary? treex, pmltq?
+Edit extension list file: `/opt/print-server/tred-extensions/extensions.lst`. Add `!` at the begining of line for not used extensions and add new extensions on the new line.
 
+```bash
+cd tred-extensions
+mv pmltq pmltq_old
+git clone https://github.com/ufal/tred-extension-pmltq.git
+mv tred-extension-pmltq pmltq
+```
 
+### Install deps
+```
+perlbrew use print-server
+cpanm PMLTQ
+```
 
 
 ## PML-TQ Web
@@ -187,14 +222,44 @@ nvm use stable
 make build
 rsync --verbose  --progress --stats --recursive -e "ssh -p $portNumber" dist/* pmltq@your.server:/opt/pmltq-web
 ```
+## Data
+### Treebank Migration from Other PML-TQ Server Instance
+#### sql_dump.postgres (source pml2sql < v1.0)
+Create database with postgres system user
+```bash
+sudo su postgres
+db=TREEBANK
+psql -c "CREATE DATABASE $db WITH TEMPLATE=template0 ENCODING = 'UTF8';"
+```
 
-## ubic
+```bash
+sudo su pmltq
+tb=TREEBANK
+cd /opt/pmltq-data/$tb/sql_dump.postgres
+psql -d ptb3_atis -f `perl -MPMLTQ -e 'print PMLTQ->shared_dir;'`/sql/init.sql
+## for each ${LAYER} run:
+  sh ${LAYER}__init.sh -u pmltq -d $tb
+```
+#### sql_dump
+
+### Adding New Treebank
+Follow [this](https://github.com/matyaskopp/ufal/blob/master/documentation/pml-tq/pml2sql.md) tutorial.
+## Start services
+
+### ubic
 ```
 perlbrew use pmltq-perl
 cpanm Ubic
+cpanm Ubic::Service::Hypnotoad
+cpanm Carton
 ubic-admin setup
 # Would you like to configure as much as possible automatically? [Y/n] y
+cd /opt/pmltq-server/current
+carton install
 
-
-cd 
+mkdir ~/ubic/services/pmltq
 ```
+copy following files ... to `~/ubic/services/pmltq` directory. And modify password to postgres database in `~/ubic/services/pmltq/print`.
+
+
+### Start PML-TQ Web

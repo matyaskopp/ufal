@@ -1,0 +1,13 @@
+use Ubic::Service::Hypnotoad;
+
+return Ubic::Service::Hypnotoad->new({
+  bin => 'carton exec hypnotoad',
+  app => '/opt/pmltq-server/current/script/pmltq-server',
+  cwd => '/opt/pmltq-server/current',
+  env => {
+    MOJO_MODE => 'production',
+    MOJO_LOG_LEVEL => 'debug',
+#    MOJO_INACTIVITY_TIMEOUT => 600
+  },
+  pid_file => '/opt/pmltq-server/shared/pmltq-server.pid',
+});

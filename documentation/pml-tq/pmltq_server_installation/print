@@ -1,0 +1,34 @@
+use Ubic::Service::SimpleDaemon;
+
+my $server_dir="/opt/print-server";
+my $data_dir="/opt/pmltq-data";
+my $tred_dir="/opt/tred_refactored";
+
+my $extensions="pdt20,pdt25,pdt30,pdt_vallex,nondeprel_common,bridging,discourse,conll2009,ptb,pdtb2,tiger,pedt,arabic_treebank,hydt,sinica,pmltq,wsj-anot,pdt_t_st,treex,btb,talbanken";
+
+my $PATH = "/opt/treex/bin:".$ENV{PATH};
+my $LIB = "/opt/treex/lib:" . ($ENV{PERL5LIB} || '');
+my $TMT_ROOT="/opt/treex/";
+
+my $resources = join ':', grep { -d $_ } glob("$data_dir/*/resources");
+$resources //= '-'; 
+
+my $db_dsn = 'dbi:Pg:dbname=pmltq_server;host=localhost;port=5432;';
+my $db_user = 'pmltq';
+my $db_password = 'P_A_S_S';
+
+my $service = Ubic::Service::SimpleDaemon->new(
+  bin => "perlbrew exec --with perl-5.22.0 xvfb-run $tred_dir/btred --warn-only -c btred.rc -Z $resources -m print_srvr_simple.btred --enable-extensions $extensions -o --host '*' --cache-dir svg_cache --data-dir '$data_dir' --",
+  env => {
+    PATH => $PATH,
+    PERL5LIB => $LIB,
+    TMT_ROOT => $TMT_ROOT,
+    DB_DSN => $db_dsn,
+    DB_USER => $db_user,
+    DB_PASSWORD => $db_password,
+  },
+  stdout => '/home/pmltq/ubic/log/print.log',
+  stderr => '/home/pmltq/ubic/log/print.err.log',
+  ubic_log => '/home/pmltq/ubic/log/print.ubic.log',
+  cwd => $server_dir
+);
