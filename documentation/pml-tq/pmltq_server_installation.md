@@ -20,6 +20,7 @@ sudo apt-get update
 sudo apt-get install libxml2-dev libxslt1-dev zlib1g-dev libgdbm-dev libx11-dev
 
 sudo adduser pmltq
+sudo usermod -g www-data pmltq
 ```
 Then you will be asked for a password.
 ```bash
@@ -107,7 +108,7 @@ cpanm URI::Escape
 cpanm Treex::PML
 cpanm Readonly
 cpanm Tk::widgets
-
+cpanm DBD::Pg
 
 ```
 
@@ -128,7 +129,6 @@ rex deploy -f Rexfile.new deploy
 ```
 
 ## PMLTQ
-**TODO** change perlbrew !!!
 ```bash
 perlbrew use pmltq-perl
 cpanm PMLTQ
@@ -203,7 +203,7 @@ mv tred-extension-pmltq pmltq
 ```
 
 ### Install deps
-```
+```bash
 perlbrew use print-server
 cpanm PMLTQ
 ```
@@ -222,6 +222,50 @@ nvm use stable
 make build
 rsync --verbose  --progress --stats --recursive -e "ssh -p $portNumber" dist/* pmltq@your.server:/opt/pmltq-web
 ```
+**On server**
+```bash
+sudo apt-get install nginx-full
+```
+change settings in the following file `/etc/nginx/sites-available/default` according to this:
+```
+server {
+        listen 80;
+        server_name _;
+        
+        keepalive_timeout 5;    
+        root /opt/pmltq-web;
+        index index.html;
+
+        gzip on;
+        gzip_http_version 1.1;
+        gzip_disable      "MSIE [1-6]\.";
+        gzip_min_length   0;
+        gzip_vary         on;
+        gzip_proxied      expired no-cache no-store private auth;
+        gzip_types        text/plain text/css application/x-javascript application/json text/javascript;
+        gzip_comp_level   9;
+
+        location ~ ^/(scripts.*js|styles|images) {
+                gzip_static on;
+                expires max;
+                add_header Cache-Control public;
+                add_header ETag "";
+
+                break;
+        }
+
+        location /services/pmltq/api {
+                rewrite /services/pmltq/api/(.*) /v1/$1 break;
+                include proxy_params;
+                proxy_pass http://127.0.0.1:9090;
+        }
+
+```
+Test validity of configuration file `sudo nginx -t` and reload nginx:
+```bash
+sudo /etc/init.d/nginx reload
+```
+
 ## Data
 ### Treebank Migration from Other PML-TQ Server Instance
 #### sql_dump.postgres (source pml2sql < v1.0)
