@@ -125,9 +125,16 @@ cpanm Rex
 Edit or copy and edit `Rexfile` file and set it.
 ```bash
 cp Rexfile Rexfile.new
-rex deploy -f Rexfile.new deploy
+rex -f Rexfile.new deploy
 ```
+**On Server:**
 
+``` bash
+perlbrew use pmltq-perl
+cpanm Carton
+cd /opt/pmltq-server/current
+carton install
+```
 ## PMLTQ
 ```bash
 perlbrew use pmltq-perl
@@ -295,11 +302,8 @@ Follow [this](https://github.com/matyaskopp/ufal/blob/master/documentation/pml-t
 perlbrew use pmltq-perl
 cpanm Ubic
 cpanm Ubic::Service::Hypnotoad
-cpanm Carton
 ubic-admin setup
 # Would you like to configure as much as possible automatically? [Y/n] y
-cd /opt/pmltq-server/current
-carton install
 
 mkdir ~/ubic/services/pmltq
 ```
