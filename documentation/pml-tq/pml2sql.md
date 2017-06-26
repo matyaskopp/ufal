@@ -205,7 +205,7 @@ db.nick="pmltq"
 database.server="euler.ms.mff.cuni.cz"
 
 --web_api-dbserver="euler"
---web_api-user="pmltq"
+--web_api-user="!!! yourLocalAdminUser (not Shibboleth)!!!"
 --web_api-url="https://lindat.mff.cuni.cz/services/pmltq/"
 ```
 ## Links
