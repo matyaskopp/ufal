@@ -22,7 +22,7 @@
 
 - **Node inspection**
   - udělat před překopáním printserveru, pro případ, že bychom z PML stromečků potřebovali vytáhnout nějaký další údaj
-
+- Kolize uživatelských jmen při přihlašování přes shibboleth
 ## Print server
 Nejprve vytvořit alternativní printserver `print_srvr_pmltq_web.btred`, který nebude posílat javascript + možná dále zjednodušší svg soubor využitím parametrů v `Tk::Canvas::SVG`. Dále by mohl lépe cachovat svg soubory - rozdělit do složek podle treebanků a lépe pojmenovat soubory.
 
@@ -32,7 +32,22 @@ Nejprve vytvořit alternativní printserver `print_srvr_pmltq_web.btred`, který
       - `TrEd::Utils::parse_file_suffix($p);` - funkce nemá žádné další závislosti na tredu
       - `$TrEd::Convert::inputenc` - `="UTF-8"`
       - `TrEd::Utils::applyFileSuffix($win,$pos->[1])` - asi také žádné závislosti
-  - **tree_server**
+      - tredí extenssionu PMLTQ
+        - využívá pro
+          - vytvoření PML-TQ dotazu
+          - manipulace s PML soubory
+          - načtení schématu z extenssiony
+        - **Rozmyslet, jestli se část tredu nemá vydat jako samostatný balíček:** 
+          - Hodilo by se umět jednoduše manipulovat s PML soubory
+          - například jako balíček `Treex::PML::Utils`
+      - **Rozmyslet, jestli suggest neudělat jako součást balíčku pmltq (`PMLTQ::Command::suggest`)**
+        - parametry:
+          - identifikátory uzlů
+          - pml soubory
+        - příkaz by se jen obalil -> pmltq-suggest-server
+    - možné problémy s rychlostí: udělat cachování otevřených souborů a zavírání souborů
+    - jaké schéma použít? v tredu se použilo to z extenssiony
+  -  **tree_server**
     - bude jen posílat svg soubory uložené na disku, cache musí být rozdělená na treebanky a jména souborů by měla vystihovat stromy
     - nyní se jména souboru vytváří na základě hashe jména pml souboru a pořadí stromu v souboru.
     - Nefunguje caching svg souborů vizualizujících dotaz, vzhledem ke způsobu vytváření dočasných souborů s dotazem v pml formátu - vytvoří se náhodný název
@@ -63,3 +78,5 @@ curl 'https://lindat.mff.cuni.cz/services/pmltq/api/treebanks/pdt30/query/svg' -
 ```
 
 Stará se o to `PMLTQ::Server::Controller::Svg::query_svg(...)`
+
+## TrEd
