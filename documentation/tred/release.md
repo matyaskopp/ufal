@@ -73,3 +73,17 @@ TODO
 
 ## Release
 
+```
+perlbrew use tred
+make release
+```
+## Publish
+fix paths in `install_tred.bash` and copy local_www to ufal.ms.mff.cuni.cz:/var/www/legacy_projects_via_url_rewrites/tred
+# TrEd installation
+
+## linux
+
+
+```
+sudo apt-get install libxml2-dev; sudo apt-get install zlib1g-dev; sudo apt-get install libx11-dev; sudo apt-get install libxft-dev; sudo apt-get install libfontconfig1-dev; sudo apt-get install libpng12-dev
+```
