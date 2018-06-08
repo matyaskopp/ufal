@@ -35,7 +35,7 @@ sudo chown pmltq:www-data pmltq-data print-server/svg_cache
 ## postgresql
 Following lines are for Ubuntu Xenial
 ```bash
-https://www.postgresql.org/download/linux/ubuntu/
+# https://www.postgresql.org/download/linux/ubuntu/
 deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
   sudo apt-key add -
@@ -112,6 +112,7 @@ cpanm DBD::Pg
 
 ```
 
+### TODO - spitted pmltq-print-server and pmltq-suggest
 
 ## PMLTQ::Server
 **On your PC:**
