@@ -77,8 +77,35 @@ TODO
 perlbrew use tred
 make release
 ```
+
+### Extenssions
+When you release TrEd, with `make release` you also release extensions that are in TrEd/trunk/extensions directory. Sometimes you may need to fetch some other extension versioned with git. An example is pmltq.
+
+You have to create dummy empty directory `trunk/extensions/pmltq`
+and then file `trunk/extensions/.make.d/pmltq`
+that will contain something like
+```
+cd pmltq
+if [ -d .git ]; then
+  echo "updating pmltq extension, removing all local changes !!!"
+  git reset --hard
+  git pull
+else
+  echo "clonning pmltq extension from github"
+  git init
+  git remote add origin git@github.com:ufal/tred-extension-pmltq.git
+  git fetch
+  git checkout -t origin/master
+fi
+```
+
+
+
 ## Publish
-fix paths in `install_tred.bash` and copy local_www to ufal.ms.mff.cuni.cz:/var/www/legacy_projects_via_url_rewrites/tred
+```
+make publish # updates also extenssions
+```
+
 # TrEd installation
 
 ## linux
