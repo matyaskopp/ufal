@@ -52,7 +52,7 @@ Do following command in postgres console:
 CREATE ROLE pmltq WITH LOGIN PASSWORD 'P_A_S_S';
 CREATE DATABASE pmltq_server;
 ```
-##perlbrew
+## perlbrew
 
 ```bash
 sudo apt-get install make gcc
@@ -77,7 +77,7 @@ cd /opt/treex
 cpanm --installdeps .
 ```
 
-##Printserver and TrEd
+## Printserver and TrEd
 ```bash
 sudo apt-get install xvfb
 
