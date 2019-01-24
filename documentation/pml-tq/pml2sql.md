@@ -11,7 +11,7 @@ All commands will be ran from `pt` directory.
 ## Requirements
 ### Client
 - Linux operating system
-- [Perl PMLTQ module](https://metacpan.org/release/PMLTQ) - minimal version 1.3.1
+- [Perl PMLTQ::Commands module](https://metacpan.org/pod/distribution/PMLTQ-Commands/lib/PMLTQ/Commands.pm) - minimal version 2.0.1
 - Treebank in valid [PML](http://ufal.mff.cuni.cz/jazz/PML/) format
 - Accounts:
  - Access to servers file system (copying PML data to server + service restart)
